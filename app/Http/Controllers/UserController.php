@@ -17,20 +17,20 @@ class UserController extends Controller
         //$credentials = $request->only('email', 'password');
         try 
         {
-            if (!$token = JWTAuth::attempt( ['email'=>$email, 'password'=>$password])) 
+            if (!$token = JWTAuth::attempt( ['email' => $email, 'password' => $password])) 
             {
                 return response()->json([
                     'response' => 'error',
                     'message' => 'Password or email is invalid',
-                    'token'=>$token
+                    'token' => $token
                 ]);
             }
         } 
         catch (JWTAuthException $e) 
         {
             return response()->json([
-            'response' => 'error',
-            'message' => 'Token creation failed',
+                'response' => 'error',
+                'message' => 'Token creation failed',
             ]);
         }
         return $token;
@@ -46,20 +46,20 @@ class UserController extends Controller
             $user->auth_token = $token;
             $user->save();
             $response = [
-                'success'=>true, 
+                'success'=> true, 
                 'data'=> [
-                    'id'=>$user->id,
-                    'auth_token'=>$user->auth_token,
-                    'name'=>$user->name, 
-                    'email'=>$user->email
-                    ]
+                    'id' => $user->id,
+                    'auth_token' => $user->auth_token,
+                    'name' => $user->name, 
+                    'email' => $user->email
+                ]
             ];           
         }
         else 
             // Authentication failed
             $response = [
-                'success'=>false, 
-                'data'=>'Record doesnt exists'
+                'success' => false, 
+                'data' => 'User doesnt exists'
             ];
       
 
@@ -69,10 +69,10 @@ class UserController extends Controller
     public function register(Request $request)
     { 
         $payload = [
-            'password'=>\Hash::make($request->password),
-            'email'=>$request->email,
-            'name'=>$request->name,
-            'auth_token'=> ''
+            'password' => \Hash::make($request->password),
+            'email' => $request->email,
+            'name' => $request->name,
+            'auth_token' => ''
         ];
                   
         $user = new User($payload);
@@ -84,8 +84,8 @@ class UserController extends Controller
             if (!is_string($token))
             {
                 return response()->json([
-                    'success'=>false,
-                    'data'=>'Token generation failed'
+                    'success' => false,
+                    'data' => 'Token generation failed'
                 ], 201);
             }
             
@@ -97,17 +97,17 @@ class UserController extends Controller
             $response = [
                 'success'=>true, 
                 'data'=>[
-                    'name'=>$user->name,
-                    'id'=>$user->id,
-                    'email'=>$request->email,
-                    'auth_token'=>$token
-                    ]
-                ];        
+                    'name' => $user->name,
+                    'id' => $user->id,
+                    'email' => $request->email,
+                    'auth_token' => $token
+                ]
+            ];        
         }
         else
             $response = [
-                'success'=>false, 
-                'data'=>'Couldnt register user'
+                'success' => false, 
+                'data'=> 'Failed to register user'
             ];
         return response()->json($response, 201);
     }
