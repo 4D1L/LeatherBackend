@@ -4,111 +4,33 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-use JWTAuth;
-use JWTAuthException;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
+
+use Hash;
 
 class UserController extends Controller
 {
     //
 
-    private function getToken($email, $password)
+    /**
+     * Create a new AuthController instance.
+     *
+     * @return void
+     */
+    public function __construct()
     {
-        $token = null;
-        //$credentials = $request->only('email', 'password');
-        try 
-        {
-            if (!$token = JWTAuth::attempt( ['email' => $email, 'password' => $password])) 
-            {
-                return response()->json([
-                    'response' => 'error',
-                    'message' => 'Password or email is invalid',
-                    'token' => $token
-                ]);
-            }
-        } 
-        catch (JWTAuthException $e) 
-        {
-            return response()->json([
-                'response' => 'error',
-                'message' => 'Token creation failed',
-            ]);
-        }
-        return $token;
+        $this->middleware('auth:api');
     }
 
-    public function login(Request $request)
+    /**
+     * Get the authenticated User
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
     {
-        $user = User::where('email', $request->email)->get()->first();
-        if ($user && \Hash::check($request->password, $user->password))
-        {
-            // Authentication success
-            $token = self::getToken($request->email, $request->password);
-            $user->auth_token = $token;
-            $user->save();
-            $response = [
-                'success'=> true, 
-                'data'=> [
-                    'id' => $user->id,
-                    'auth_token' => $user->auth_token,
-                    'name' => $user->name, 
-                    'email' => $user->email
-                ]
-            ];           
-        }
-        else 
-            // Authentication failed
-            $response = [
-                'success' => false, 
-                'data' => 'User doesnt exists'
-            ];
-      
-
-        return response()->json($response, 201);
-    }
-
-    public function register(Request $request)
-    { 
-        $payload = [
-            'password' => \Hash::make($request->password),
-            'email' => $request->email,
-            'name' => $request->name,
-            'auth_token' => ''
-        ];
-                  
-        $user = new User($payload);
-        if ($user->save())
-        {   
-            //User saved in database, create a token
-            $token = self::getToken($request->email, $request->password); // generate user token
-            
-            if (!is_string($token))
-            {
-                return response()->json([
-                    'success' => false,
-                    'data' => 'Token generation failed'
-                ], 201);
-            }
-            
-            $user = User::where('email', $request->email)->get()->first();
-            
-            $user->auth_token = $token; // update user token
-            $user->save();
-            
-            $response = [
-                'success'=>true, 
-                'data'=>[
-                    'name' => $user->name,
-                    'id' => $user->id,
-                    'email' => $request->email,
-                    'auth_token' => $token
-                ]
-            ];        
-        }
-        else
-            $response = [
-                'success' => false, 
-                'data'=> 'Failed to register user'
-            ];
-        return response()->json($response, 201);
+        return response()->json(Auth::guard()->user());
     }
 }
