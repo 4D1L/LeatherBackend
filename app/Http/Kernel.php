@@ -63,5 +63,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'jwt-auth' => \App\Http\Middleware\JWT::class,
+        'api-header' => \App\Http\Middleware\APIHeader::class,
     ];
 }
