@@ -39,19 +39,7 @@ Route::group(['middleware' => 'api'], function () {
     });
 });
 
-/*
-Route::group(['middleware' => ['jwt.auth','api-header']], function () {
-    /*
-    **  Routes that require the use of tokens are defined here.
-    
-
-    Route::get('users/list', function(){
-        $users = App\User::all();
-        
-        $response = [
-            'success'=>true, 
-            'data'=>$users
-        ];
-        return response()->json($response, 201);
-    });
-});*/
+Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {
+    Route::get('show', 'NewsFeedController@show');
+    Route::post('create', 'NewsFeedController@create');
+});
