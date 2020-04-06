@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Role\UserRole;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -65,6 +66,9 @@ class AuthController extends Controller
             'password' => Hash::make($request->get('password')),
         ]);
 
+        $user->addRole(UserRole::ROLE_TRADER);
+        $user->save();
+        
         $token = \JWTAuth::fromUser($user);
 
         return response()->json(compact('user','token'),201);
