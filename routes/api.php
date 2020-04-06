@@ -37,6 +37,15 @@ Route::group(['middleware' => 'api'], function () {
         ];
         return response()->json($response, 201);
     });
+
+    // TODO: REMOVE ONE DAY
+    Route::get('roles/give/admin', function() {
+        $user = App\User::where('id', 1)->first();
+        $user->addRole(\App\Role\UserRole::ROLE_ADMIN);
+        $user->save();
+
+        return response()->json(["message" => "Assigned"]);
+    });
 });
 
 Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {
