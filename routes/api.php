@@ -43,3 +43,8 @@ Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {
     Route::get('show', 'NewsFeedController@show');
     Route::post('create', 'NewsFeedController@create');
 });
+
+Route::group(['prefix' => 'currency',  'middleware' => 'api'], function() {
+    Route::get('all', 'CurrencyController@index');
+    Route::get('get/{name}', 'CurrencyController@show');
+});
