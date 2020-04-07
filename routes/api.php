@@ -27,15 +27,6 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/register', 'AuthController@register');
 
     Route::get('me', 'UserController@me');
-
-    // TODO: REMOVE ONE DAY
-    Route::get('roles/give/admin', function() {
-        $user = App\User::where('id', 1)->first();
-        $user->addRole(\App\Role\UserRole::ROLE_ADMIN);
-        $user->save();
-
-        return response()->json(["message" => "Assigned"]);
-    });
 });
 
 Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {
@@ -51,5 +42,8 @@ Route::group(['prefix' => 'currency',  'middleware' => 'api'], function() {
 Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . \App\Role\UserRole::ROLE_ADMIN], function() {
     Route::get('users/list', 'AdminController@getAllUsers');
     Route::get('users/get/{userid}', 'AdminController@getUser');
+
     Route::post('users/edit/{userid}', 'AdminController@editUser');
+    Route::post('users/edit/{userid}/role/add', 'AdminController@addRoleToUser');
+    Route::post('users/edit/{userid}/role/remove', 'AdminController@removeRoleFromUser');
 });
