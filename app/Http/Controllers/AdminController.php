@@ -207,7 +207,7 @@ class AdminController extends Controller
                     "message" => "No role provided."
                 ]
             ];
-            return response()->json($response, 403);
+            return response()->json($response, 400);
         }
 
         $user = User::find($userid);
@@ -220,7 +220,7 @@ class AdminController extends Controller
                     "message" => "The specified user does not exist."
                 ]
             ];
-            return response()->json($response, 403);
+            return response()->json($response, 404);
         }
 
         $role = strtoupper($request->role);
@@ -233,7 +233,7 @@ class AdminController extends Controller
                     "message" => "The specified user does not have this role."
                 ]
             ];
-            return response()->json($response, 403);
+            return response()->json($response, 400);
         }
         
         // Remove the specified role from the user.
