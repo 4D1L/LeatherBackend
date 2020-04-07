@@ -36,7 +36,102 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'roles' => 'array',
     ];
+
+    /**
+     * Add a role to a user.
+     * 
+     * @param string $role
+     * @return $this
+     */
+    public function addRole(string $role)
+    {
+        $roles = $this->getRoles();
+        $roles[] = $role;
+        
+        $roles = array_unique($roles);
+        $this->setRoles($roles);
+
+        return $this;
+    }
+
+    /**
+     * Removes a role to a user.
+     * 
+     * @param string $role
+     * @return $this
+     */
+    public function removeRole(string $role)
+    {
+        $roles = $this->getRoles();
+
+        if (($key = array_search($role, $roles)) !== false) {
+            unset($roles[$key]);
+        }
+        
+        $roles = array_unique($roles);
+        $this->setRoles($roles);
+
+        return $this;
+    }
+
+    /**
+     * Sets/overwrites a user's roles.
+     * 
+     * @param array $roles
+     * @return $this
+     */
+    public function setRoles(array $roles)
+    {
+        $this->setAttribute('roles', $roles);
+        return $this;
+    }
+
+    /**
+     * Checks if a user has a specified roles.
+     * 
+     * @param $role
+     * @return mixed
+     */
+    public function hasRole($role)
+    {
+        return in_array($role, $this->getRoles());
+    }
+
+
+    /**
+     * Checks if a user has any of the supplied roles.
+     * 
+     * @param array $roles
+     * @return mixed
+     */
+    public function hasRoles($roles)
+    {
+        $currentRoles = $this->getRoles();
+        foreach($roles as $role) {
+            if (!in_array($role, $currentRoles)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Gets a user's roles.
+     * 
+     * @return array
+     */
+    public function getRoles()
+    {
+        $roles = $this->getAttribute('roles');
+
+        if (is_null($roles)) {
+            $roles = [];
+        }
+
+        return $roles;
+    }
 
     /*
     **  Following code pulled from documentation:

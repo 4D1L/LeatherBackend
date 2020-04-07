@@ -27,16 +27,6 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/register', 'AuthController@register');
 
     Route::get('me', 'UserController@me');
-
-    Route::get('users/list', function(){
-        $users = App\User::all();
-        
-        $response = [
-            'success'=>true, 
-            'data'=>$users
-        ];
-        return response()->json($response, 201);
-    });
 });
 
 Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {
@@ -47,4 +37,13 @@ Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {
 Route::group(['prefix' => 'currency',  'middleware' => 'api'], function() {
     Route::get('all', 'CurrencyController@index');
     Route::get('get/{name}', 'CurrencyController@show');
+});
+
+Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . \App\Role\UserRole::ROLE_ADMIN], function() {
+    Route::get('users/list', 'AdminController@getAllUsers');
+    Route::get('users/get/{userid}', 'AdminController@getUser');
+
+    Route::post('users/edit/{userid}', 'AdminController@editUser');
+    Route::post('users/edit/{userid}/role/add', 'AdminController@addRoleToUser');
+    Route::post('users/edit/{userid}/role/remove', 'AdminController@removeRoleFromUser');
 });
