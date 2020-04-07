@@ -63,4 +63,54 @@ class AdminController extends Controller
 
         return response()->json($response, 200);
     }
+
+    /**
+     * Allows an admin to edit a user's personal details.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function editUser(Request $request, $userid)
+    {
+        $user = User::find($userid);
+
+        if(!$user) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "User does not exist."
+                ]
+            ];
+
+            return response()->json($response, 404);
+        }
+
+        if(!$request->hasAny(['name', 'email'])) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "No data provided."
+                ]
+            ];
+
+            return response()->json($response, 403);
+        }
+
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+
+        $user->save();
+    
+
+        $response = [
+            'success' => true, 
+            'response' => $user
+        ];
+
+        return response()->json($response, 200);
+    }
 }

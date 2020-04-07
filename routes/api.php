@@ -51,4 +51,5 @@ Route::group(['prefix' => 'currency',  'middleware' => 'api'], function() {
 Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . \App\Role\UserRole::ROLE_ADMIN], function() {
     Route::get('users/list', 'AdminController@getAllUsers');
     Route::get('users/get/{userid}', 'AdminController@getUser');
+    Route::post('users/edit/{userid}', 'AdminController@editUser');
 });
