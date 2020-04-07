@@ -28,16 +28,6 @@ Route::group(['middleware' => 'api'], function () {
 
     Route::get('me', 'UserController@me');
 
-    Route::get('users/list', function(){
-        $users = App\User::all();
-        
-        $response = [
-            'success'=>true, 
-            'data'=>$users
-        ];
-        return response()->json($response, 201);
-    });
-
     // TODO: REMOVE ONE DAY
     Route::get('roles/give/admin', function() {
         $user = App\User::where('id', 1)->first();
@@ -56,4 +46,9 @@ Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {
 Route::group(['prefix' => 'currency',  'middleware' => 'api'], function() {
     Route::get('all', 'CurrencyController@index');
     Route::get('get/{name}', 'CurrencyController@show');
+});
+
+Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . \App\Role\UserRole::ROLE_ADMIN], function() {
+    Route::get('users/list', 'AdminController@getAllUsers');
+    Route::get('users/get/{userid}', 'AdminController@getUser');
 });
