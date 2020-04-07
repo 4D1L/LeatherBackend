@@ -57,6 +57,26 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Removes a role to a user.
+     * 
+     * @param string $role
+     * @return $this
+     */
+    public function removeRole(string $role)
+    {
+        $roles = $this->getRoles();
+
+        if (($key = array_search($role, $roles)) !== false) {
+            unset($roles[$key]);
+        }
+        
+        $roles = array_unique($roles);
+        $this->setRoles($roles);
+
+        return $this;
+    }
+
+    /**
      * Sets/overwrites a user's roles.
      * 
      * @param array $roles
