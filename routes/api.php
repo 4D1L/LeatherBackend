@@ -52,7 +52,9 @@ Route::group(['prefix' => 'support',  'middleware' => 'api'], function() {
     //Route::get('get/{name}', 'CurrencyController@show');
 
     Route::group(['prefix' => 'ticket'], function() {
+        Route::get('index', 'SupportTicketController@index');
         Route::get('get/{ticketid}', 'SupportTicketController@show');
+        Route::get('get/author/{userid?}', 'SupportTicketController@showByUser');
         Route::post('create', 'SupportTicketController@create');
         Route::post('create/{ticketid}/message', 'SupportTicketController@addMessage');
         Route::post('update/{ticketid}', 'SupportTicketController@update');

@@ -23,6 +23,106 @@ class SupportTicketController extends Controller
     }
 
     /**
+     * Returns an array of all the support tickets in the system.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index($active = null)
+    {
+        // Create new instance of the Role Checker.
+        $roleChecker = new RoleChecker();
+
+        // Check if the authenticated user is the author of the ticket, or if they have permission to the support role.
+        if(!$roleChecker->check(Auth::user(), 'ROLE_SUPPORT'))
+        {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "No permissions to view the ticket list."
+                ]
+            ];
+            return response()->json($response, 403);
+        }
+
+        $tickets = null;
+        if($active == null) {
+            // If parameter not passed, load all tickets.
+            $tickets = SupportTicket::without('messages')->get();
+
+            $response = [
+                'success' => true,
+                'response' => $tickets
+            ];
+            return response()->json($response);
+        } 
+
+        // 'Clean' the parameter so the it can either be True, False, or NULL
+        $active = filter_var($active, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+        // If NULL, return an error.
+        if($active == null) {
+            $response = [
+                'success' => false,
+                'response' => "Invalid parameter passed."
+            ];
+            return response()->json($response, 400);
+        }
+
+        // If active is set, get tickets conditionally and then return.
+        $tickets = SupportTicket::where('active', $active)->without('messages')->get();
+        $response = [
+            'success' => true,
+            'response' => $tickets
+        ];
+        return response()->json($response);
+    }
+
+    /**
+     * Returns an array of a user's support tickets.
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showByUser($userid = null)
+    {
+        if($userid == null) {
+            $userid = Auth::user()->id;
+        } else {
+            // Create new instance of the Role Checker.
+            $roleChecker = new RoleChecker();
+
+            // Check if the authenticated user is the author of the ticket, or if they have permission to the support role.
+            if(!$roleChecker->check(Auth::user(), 'ROLE_SUPPORT'))
+            {
+                $response = [
+                    'success' => false,
+                    'response' => [
+                        "message" => "No permissions to view the ticket list."
+                    ]
+                ];
+                return response()->json($response, 403);
+            }
+        }
+
+        // Load the user from the database.
+        $user = User::find($userid);
+
+        // Check if the specified user exists within the system.
+        if(!$user) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "The specified user does not exist."
+                ]
+            ];
+            return response()->json($response, 404);
+        }
+
+
+        // Make use of the relationship to get a list of a user's support tickets.
+        return response()->json($user->supportTickets);
+    }
+
+    /**
      * Returns data about a Support Ticket.
      *
      * @return \Illuminate\Http\JsonResponse
