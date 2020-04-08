@@ -17,6 +17,16 @@ class Currency extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'transactions_supported' => 'boolean',
+        'active' => 'boolean'
+    ];
+
+    /**
      * Gets currency price data from coingecko.
      *
      * @var array

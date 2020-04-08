@@ -99,7 +99,6 @@ class User extends Authenticatable implements JWTSubject
         return in_array($role, $this->getRoles());
     }
 
-
     /**
      * Checks if a user has any of the supplied roles.
      * 
@@ -131,6 +130,26 @@ class User extends Authenticatable implements JWTSubject
         }
 
         return $roles;
+    }
+
+    /*
+    ** Support Ticket Relationship
+    */
+
+    /**
+     * Get the support queries created by the user.
+     */
+    public function supportTickets()
+    {
+        return $this->hasMany('App\SupportTicket');
+    }
+
+    /**
+     * Get the support queries created by the user.
+     */
+    public function supportTicketMessages()
+    {
+        return $this->hasMany('App\SupportTicketMessages', 'user_id');
     }
 
     /*
