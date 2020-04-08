@@ -144,6 +144,13 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\SupportTickets', 'user_id');
     }
 
+    /**
+     * Get the support queries created by the user.
+     */
+    public function supportTicketMessages()
+    {
+        return $this->hasMany('App\SupportTicketMessages', 'user_id');
+    }
 
     /*
     **  Following code pulled from documentation:
