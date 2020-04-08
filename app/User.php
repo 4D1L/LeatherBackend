@@ -141,7 +141,7 @@ class User extends Authenticatable implements JWTSubject
      */
     public function supportTickets()
     {
-        return $this->hasMany('App\SupportTickets', 'user_id');
+        return $this->hasMany('App\SupportTicket');
     }
 
     /**
