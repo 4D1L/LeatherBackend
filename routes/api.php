@@ -47,3 +47,15 @@ Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . 
     Route::post('users/edit/{userid}/role/add', 'AdminController@addRoleToUser');
     Route::post('users/edit/{userid}/role/remove', 'AdminController@removeRoleFromUser');
 });
+
+Route::group(['prefix' => 'support',  'middleware' => 'api'], function() {
+    //Route::get('get/{name}', 'CurrencyController@show');
+
+    Route::group(['prefix' => 'ticket'], function() {
+        Route::get('get/{ticketid}', 'SupportTicketController@show');
+        Route::post('create', 'SupportTicketController@create');
+        Route::post('create/{ticketid}/message', 'SupportTicketController@addMessage');
+        Route::post('update/{ticketid}', 'SupportTicketController@update');
+    });
+    
+});
