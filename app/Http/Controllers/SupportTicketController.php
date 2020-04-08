@@ -40,6 +40,22 @@ class SupportTicketController extends Controller
             ], 404);
         }
 
+        // Create new instance of the Role Checker.
+        $roleChecker = new RoleChecker();
+
+        // Check if the authenticated user is the author of the ticket, or if they have permission to the support role.
+        if(!($supportTicket->author->id === Auth::user()->id || $roleChecker->check(Auth::user(), 'ROLE_SUPPORT')))
+        {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "No permissions to make changes to this ticket."
+                ]
+            ];
+            return response()->json($response, 403);
+        }
+
+
         // Return the ticket.
         /**
          * NOTE: We do not have to manually retrieve details about the author 
