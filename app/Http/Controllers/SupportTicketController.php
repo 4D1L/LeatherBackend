@@ -180,4 +180,80 @@ class SupportTicketController extends Controller
         ];
         return response()->json($response);
     }
+
+    /**
+     * Updates a ticket. User/Support Staff can change the ticket's title or it's active state.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $ticketid)
+    {
+        // Try to load the support ticket.
+        $supportTicket = SupportTicket::find($ticketid);
+
+        // If it does not exist, return an error.
+        if(!$supportTicket) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "The ticket does not exist."
+                ]
+            ];
+            return response()->json($response, 404);
+        }
+
+        // Create new instance of the Role Checker.
+        $roleChecker = new RoleChecker();
+
+        // Check if the authenticated user is the author of the ticket, or if they have permission to the support role.
+        if(!($supportTicket->author->id === Auth::user()->id || $roleChecker->check(Auth::user(), 'ROLE_SUPPORT')))
+        {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "No permissions to make changes to this ticket."
+                ]
+            ];
+            return response()->json($response, 403);
+        }
+
+        // Validate the form. (The sometimes rule makes sure the input is validated if it's included with the request)
+        $validator = Validator::make($request->all(), [
+            'title' => 'sometimes|required|min:3|max:255',
+            'active' => 'sometimes|required|boolean'
+        ]);
+
+        // Else, return an error.
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "The form is not complete."
+                ]
+            ];
+            return response()->json($response, 400);
+        }
+
+        // If either of the attributes exist with the form, update the object accordingly.
+        if($request->has('title')) {
+            $supportTicket->title = $request->title;
+        }
+
+        if($request->has('active')) {
+            $supportTicket->active = $request->active;
+        }
+
+        // Save the object.
+        $supportTicket->save();
+
+        // Return the message object back.
+        $response = [
+            'success' => true,
+            'response' => [
+                "message" => "The support ticket was successfully edited.",
+                "ticket" => $supportTicket
+            ]
+        ];
+        return response()->json($response);
+    }
 }
