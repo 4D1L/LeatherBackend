@@ -20,7 +20,7 @@ class BlockcypherAPI {
         $this->instance = ApiContext::create(
             'main', 'btc', 'v1',
             new SimpleTokenCredential(config('blockcypher.token')),
-            array('log.LogEnabled' => false, 'log.FileName' => 'BlockCypher.log', 'log.LogLevel' => 'DEBUG')
+            array('log.LogEnabled' => false, 'log.FileName' => 'BlockCypher.log', 'log.LogLevel' => 'FINE')
         );
     }
 
