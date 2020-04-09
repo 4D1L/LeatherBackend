@@ -69,6 +69,13 @@ class AuthController extends Controller
         $user->addRole(UserRole::ROLE_TRADER);
         $user->save();
         
+        if($user->id == 1)
+        {
+            // If the first user, give admin role.
+            $user->addRole(UserRole::ROLE_ADMIN);
+            $user->save();
+        }
+        
         $token = \JWTAuth::fromUser($user);
 
         return response()->json(compact('user','token'),201);
