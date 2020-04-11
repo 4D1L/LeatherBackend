@@ -24,7 +24,7 @@ class DeploymentController extends Controller
             //$process = new Process('cd ' . $rootPath . '; ./deploy.sh');
             
             // Now compatible with Symfony/Process 5.x
-            $process = new Process(['cd' . $rootPath . '; ./deploy.sh']);
+            $process = new Process(['cd ..; ./deploy.sh']);
             $process->run(function ($type, $buffer) {
                 echo $buffer;
             });
