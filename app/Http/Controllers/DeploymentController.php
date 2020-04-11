@@ -21,13 +21,15 @@ class DeploymentController extends Controller
 
         if(hash_equals($githubHash, $localHash)) {
             $rootPath = base_path();
-            //$process = new Process('cd ' . $rootPath . '; ./deploy.sh');
+            //$process = exec('cd ' . $rootPath . '; ./deploy.sh');
             
             // Now compatible with Symfony/Process 5.x
-            $process = new Process(['cd ..; ./deploy.sh']);
+            /*$process = new Process(['cd ..; ./deploy.sh']);
             $process->run(function ($type, $buffer) {
                 echo $buffer;
-            });
+            });*/
+            
+            exec('cd ' . $rootPath . '; ./deploy.sh');
         }
     }
 }
