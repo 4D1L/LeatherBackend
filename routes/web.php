@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-
-    // The deploy route automates deployment to the live server.
-    Route::post('deploy', 'DeploymentController@deploy');
 });
+
+// The deploy route automates deployment to the live server.
+Route::post('deploy', 'DeploymentController@deploy');
+
