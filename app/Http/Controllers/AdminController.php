@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Role\UserRole;
 use App\Http\Controllers\Controller;
 
+use App\Helpers\BlockcypherAPI;
+
+// Include the SDK modules you need.
+use \BlockCypher\Client\FaucetClient;
+
 class AdminController extends Controller
 {
     /**
@@ -253,5 +258,27 @@ class AdminController extends Controller
 
         return response()->json($response);
 
+    }
+
+    /**
+     * Replenish the platform test account with bitcoin.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function replenishSystemAccount()
+    {
+        //return response()->json(["token" => config('blockcypher.system_public_address')]);
+        $bitcoinAmount = 0.5 * 100000000;
+        $faucetClient = new FaucetClient(BlockcypherAPI::getInstance());
+        $faucetResponse = $faucetClient->fundAddress('C3SPXmwuAtoE5U4j75TwxXDM4iCsMZFNmV', $bitcoinAmount);
+
+        $response = [
+            'success' => true,
+            'response' => [
+                "transaction" => $faucetResponse->tx_ref
+            ]
+        ];
+
+        return response()->json($response);
     }
 }
