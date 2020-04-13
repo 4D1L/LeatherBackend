@@ -39,6 +39,12 @@ Route::group(['prefix' => 'currency',  'middleware' => 'api'], function() {
     Route::get('get/{name}', 'CurrencyController@show');
 });
 
+Route::group(['prefix' => 'wallet',  'middleware' => 'api'], function() {
+
+    Route::post('create', 'WalletController@create');
+    
+});
+
 Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . \App\Role\UserRole::ROLE_ADMIN], function() {
     Route::get('users/list', 'AdminController@getAllUsers');
     Route::get('users/get/{userid}', 'AdminController@getUser');
@@ -46,6 +52,8 @@ Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . 
     Route::post('users/edit/{userid}', 'AdminController@editUser');
     Route::post('users/edit/{userid}/role/add', 'AdminController@addRoleToUser');
     Route::post('users/edit/{userid}/role/remove', 'AdminController@removeRoleFromUser');
+
+    Route::get('system/wallet/replenish', 'AdminController@replenishSystemAccount');
 });
 
 Route::group(['prefix' => 'support',  'middleware' => 'api'], function() {
