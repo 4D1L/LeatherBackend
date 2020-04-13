@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Symfony\Component\Process\Process;
 
 class DeploymentController extends Controller
 {
@@ -21,10 +20,16 @@ class DeploymentController extends Controller
 
         if(hash_equals($githubHash, $localHash)) {
             $rootPath = base_path();
-            $process = new Process('cd ' . $rootPath . '; ./deploy.sh');
+            //$process = exec('cd ' . $rootPath . '; ./deploy.sh');
+            
+            // Now compatible with Symfony/Process 5.x
+            /*$process = new Process(['cd ..; ./deploy.sh']);
             $process->run(function ($type, $buffer) {
                 echo $buffer;
-            });
+            });*/
+            
+            $output = shell_exec('cd ' . $rootPath . '; ./deploy.sh');
+            echo $output;
         }
     }
 }
