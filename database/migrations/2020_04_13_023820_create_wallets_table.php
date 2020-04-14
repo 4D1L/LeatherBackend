@@ -24,12 +24,11 @@ class CreateWalletsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->text("address");
-
             $table->text("publicKey");
-
             $table->text("privateKey");
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
