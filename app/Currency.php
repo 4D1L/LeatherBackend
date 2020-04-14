@@ -26,6 +26,18 @@ class Currency extends Model
         'active' => 'boolean'
     ];
 
+    /*
+    ** Wallet Relationship
+    */
+
+    /**
+     * Get the wallets owned by a user.
+     */
+    public function wallets()
+    {
+        return $this->hasMany('App\Wallet');
+    }
+    
     /**
      * Gets currency price data from coingecko.
      *
