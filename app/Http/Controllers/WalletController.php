@@ -91,8 +91,10 @@ class WalletController extends Controller
      */
     public function delete($id)
     {
+        // Get the instance of wallet by its ID.
         $wallet = Wallet::where('id', $id)->get();
 
+        // If it does not exist, return an error message.
         if(!$wallet) {
             $response = [
                 'success' => false,
@@ -103,6 +105,7 @@ class WalletController extends Controller
             return response()->json($response, 404);
         }
 
+        // If the logged in user does not own the wallet, return an error message.
         if($wallet->user->id === Auth::user()->id) {
             $response = [
                 'success' => false,
@@ -113,8 +116,10 @@ class WalletController extends Controller
             return response()->json($response, 403);
         }
     
+        // Otherwise, destroy the instance.
         $wallet->destroy();
 
+        // Return a message.
         $response = [
             'success' => true,
             'response' => [
@@ -132,9 +137,9 @@ class WalletController extends Controller
      */
     public function index($currencyName = null)
     {
+        // If a currency name is not provided, return an array of all the wallets associated with the user.
         if($currencyName == null)
         {
-            //return "response" . $currencyid;
             $wallets = Auth::user()->wallets()->get();
             $response = [
                 'success' => true,
@@ -144,7 +149,10 @@ class WalletController extends Controller
             return response()->json($response);
         }
 
+        // Otherwise, find the instance of the currency being requested.
         $currency = Currency::where('name', 'LIKE', $currencyName)->first();
+
+        // If it does not exist, return an error message.
         if(!$currency) {
             $response = [
                 'success' => false,
@@ -155,7 +163,10 @@ class WalletController extends Controller
             return response()->json($response, 404);
         }
 
+        // Fetch wallets which are a part of a currency's block chain and are owned by the user.
         $wallets = Auth::user()->wallets()->where('currency_id', $currency->id)->get();
+
+        // Return the wallets.
         $response = [
             'success' => true,
             'response' => $wallets
