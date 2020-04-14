@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\User;
 use Auth;
 use App\Wallet;
@@ -29,12 +30,29 @@ class WalletController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
-        // Fetch bitcoin.
-        $currency = Currency::where('name', 'LIKE', 'Bitcoin')->first();
 
-        if(!$currency) {
+        // Validate the submission. Wallets are different for currencies.
+        $validator = Validator::make($request->all(), [
+            'currency' => 'required',
+        ]);
+
+        // If validation fails, return an error message.
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "The form is not complete."
+                ]
+            ];
+            return response()->json($response, 400);
+        }
+
+        // Fetch currency.
+        $currency = Currency::where('name', 'LIKE', $request->currency)->first();
+
+        if(!$currency || $currency->transactions_supported == false) {
             $response = [
                 'success' => false,
                 'response' => [
@@ -50,12 +68,12 @@ class WalletController extends Controller
 
         // Store the wallet information in our system.
         $wallet = new Wallet();
-        $wallet->currency_id = $currency->id;
         $wallet->user_id = Auth::user()->id;
         $wallet->publicKey = $addressKeyChain->public;
         $wallet->privateKey = $addressKeyChain->private;
         $wallet->address = $addressKeyChain->address;
-        $wallet->save();
+        
+        $currency->wallets()->save($wallet);
 
         // Return information about the newly created wallet.
         $response = [

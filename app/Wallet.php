@@ -12,7 +12,7 @@ class Wallet extends Model
      *
      * @var array
      */
-    protected $with = ['user', 'currency'];
+    protected $with = ['currency'];
 
     /**
      * Get the owner of a wallet
