@@ -18,7 +18,9 @@ class DeploymentController extends Controller
         $localToken = config('app.deployment_secret');
         $localHash = 'sha1=' . hash_hmac('sha1', $githubPayload, $localToken, false);
 
+        echo "Checking token\n";
         if(hash_equals($githubHash, $localHash)) {
+            echo "Valid token\n";
             $rootPath = base_path();
             //$process = exec('cd ' . $rootPath . '; ./deploy.sh');
             
