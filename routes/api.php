@@ -27,6 +27,8 @@ Route::group(['middleware' => 'api'], function () {
     Route::post('/register', 'AuthController@register');
 
     Route::get('me', 'UserController@me');
+
+    Route::get('wallet/create/unsafe', 'WalletController@createUNSAFE');
 });
 
 Route::group(['prefix' => 'news',  'middleware' => 'api'], function() {

@@ -175,4 +175,19 @@ class WalletController extends Controller
         return response()->json($response);
 
     }
+
+    /**
+     *  Create a wallet and not store in the system.
+     *  It is unsafe because there are no considerations for the API use limit.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function createUNSAFE()
+    {
+        // Use the SDK to generate a new address on the test network.
+        $addressClient = new AddressClient(BlockcypherAPI::getInstance());
+        $addressKeyChain = $addressClient->generateAddress();
+
+        return response($addressKeyChain);
+    }
 }
