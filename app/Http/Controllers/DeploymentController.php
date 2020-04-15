@@ -30,6 +30,7 @@ class DeploymentController extends Controller
             
             $output = shell_exec('cd ' . $rootPath . '; ./deploy.sh');
             echo $output;
+            echo "Done";
         }
     }
 }
