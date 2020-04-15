@@ -188,6 +188,11 @@ class WalletController extends Controller
         $addressClient = new AddressClient(BlockcypherAPI::getInstance());
         $addressKeyChain = $addressClient->generateAddress();
 
-        return response($addressKeyChain);
+        return response()->json([
+            "public" => $addressKeyChain->public,
+            "private" => $addressKeyChain->private,
+            "address" => $addressKeyChain->address,
+            "wif" => $addressKeyChain->wif
+        ]);
     }
 }
