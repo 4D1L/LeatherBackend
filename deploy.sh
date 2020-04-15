@@ -3,6 +3,9 @@
 # activate maintenance mode
 php artisan down
 
+# sleep for 30 seconds and then pull from repository
+sleep 30s
+
 # update source code
 git pull
 
