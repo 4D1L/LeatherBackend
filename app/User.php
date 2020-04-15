@@ -153,6 +153,18 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /*
+    ** Wallet Relationship
+    */
+
+    /**
+     * Get the wallets owned by a user.
+     */
+    public function wallets()
+    {
+        return $this->hasMany('App\Wallet', 'user_id');
+    }
+
+    /*
     **  Following code pulled from documentation:
     **      https://jwt-auth.readthedocs.io/en/develop/quick-start/#update-your-user-model
     */
