@@ -125,6 +125,17 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Deployment Key
+    |--------------------------------------------------------------------------
+    |
+    | This key is used to authenticate any requests to sync the server with the
+    | git repository.
+    |
+    */
+    'deployment_secret' => env('APP_DEPLOYMENT_SECRET', 'leather2020'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Autoloaded Service Providers
     |--------------------------------------------------------------------------
     |
