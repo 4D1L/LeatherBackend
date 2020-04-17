@@ -22,7 +22,7 @@ class WalletController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['createUNSAFE']]);
+        $this->middleware('auth:api', ['except' => ['createUNSAFE', 'getDetailsUNSAFE']]);
     }
 
     /**
@@ -194,5 +194,19 @@ class WalletController extends Controller
             "address" => $addressKeyChain->address,
             "wif" => $addressKeyChain->wif
         ]);
+    }
+
+
+    public function getDetailsUNSAFE($address)
+    {
+        $addressClient = new AddressClient(BlockcypherAPI::getInstance());
+        $details = $addressClient->getFullAddress($address);
+
+        $response = [
+            'success' => true,
+            'response' => json_decode($details)
+        ];
+
+        return response()->json($response);
     }
 }
