@@ -46,6 +46,14 @@ Route::group(['prefix' => 'wallet',  'middleware' => 'api'], function() {
     Route::get('get/user/{currencyid?}', 'WalletController@index');
     Route::post('create', 'WalletController@create');
     Route::get('delete/{walletid}', 'WalletController@delete');
+    Route::get('get/detailed/{address}/unsafe', 'WalletController@getDetailsUNSAFE');
+    
+});
+
+Route::group(['prefix' => 'transaction',  'middleware' => 'api'], function() {
+
+    Route::post('create/unsafe', 'TransactionController@createUNSAFE');
+    Route::post('create/micro/unsafe', 'TransactionController@createMicroUNSAFE');
     
 });
 
