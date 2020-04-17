@@ -109,7 +109,7 @@ class TransactionController extends Controller
         $validator = Validator::make($request->all(), [
             'sender_private_key' => 'required',
             'recipient_address' => 'required',
-            //'amount' => 'required|numeric'
+            'amount' => 'required|numeric'
         ]);
 
         // If validation fails, return an error message.
@@ -138,7 +138,7 @@ class TransactionController extends Controller
         $microTX = $microTXClient->sendWithPrivateKey(
             $request->sender_private_key, // private key
             $request->recipient_address, // to address
-            10000 // value (satoshis)
+            $request->amount // value (satoshis)
         );
 
         return response($microTX);
