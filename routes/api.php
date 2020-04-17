@@ -49,6 +49,14 @@ Route::group(['prefix' => 'wallet',  'middleware' => 'api'], function() {
     
 });
 
+Route::group(['prefix' => 'transaction',  'middleware' => 'api'], function() {
+
+    //Route::post('create', 'TransactionController@create');
+    Route::post('create/unsafe', 'TransactionController@createUNSAFE');
+    Route::post('create/micro/unsafe', 'TransactionController@createMicroUNSAFE');
+    
+});
+
 Route::group(['prefix' => 'admin',  'middleware' => 'api', 'check_user_role:' . \App\Role\UserRole::ROLE_ADMIN], function() {
     Route::get('users/list', 'AdminController@getAllUsers');
     Route::get('users/get/{userid}', 'AdminController@getUser');
