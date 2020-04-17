@@ -124,7 +124,7 @@ class TransactionController extends Controller
         }
 
         $value = $request->amount * 100000000;
-        if($value > 4000000) {
+        if(7000 > $value || $value > 4000000) {
             $response = [
                 'success' => false,
                 'response' => [
