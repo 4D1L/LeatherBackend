@@ -51,7 +51,6 @@ Route::group(['prefix' => 'wallet',  'middleware' => 'api'], function() {
 
 Route::group(['prefix' => 'transaction',  'middleware' => 'api'], function() {
 
-    //Route::post('create', 'TransactionController@create');
     Route::post('create/unsafe', 'TransactionController@createUNSAFE');
     Route::post('create/micro/unsafe', 'TransactionController@createMicroUNSAFE');
     

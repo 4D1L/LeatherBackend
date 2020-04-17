@@ -23,11 +23,6 @@ class TransactionController extends Controller
         $this->middleware('auth:api', ['except' => ['createUNSAFE']]);
     }
 
-    public function create(Request $request)
-    {
-        
-    }
-
     public function createUNSAFE(Request $request)
     {
         // Validate the submission. Tickets need a ticket and an initial message.
