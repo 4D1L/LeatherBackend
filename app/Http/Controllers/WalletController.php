@@ -196,11 +196,23 @@ class WalletController extends Controller
         ]);
     }
 
-
+    /**
+     * Gets details about a wallet and its transactions.
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getDetailsUNSAFE($address)
     {
         $addressClient = new AddressClient(BlockcypherAPI::getInstance());
-        $details = $addressClient->getFullAddress($address);
+        try{
+            $details = $addressClient->getFullAddress($address);
+        } catch(\BlockCypher\Exception\BlockCypherConnectionException $ex) {
+            $response = [
+                'success' => false,
+                'response' => "Address does not exist."
+            ];
+            return response()->json($response);
+        }
+        
 
         $response = [
             'success' => true,
