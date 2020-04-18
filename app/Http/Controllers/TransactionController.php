@@ -133,9 +133,13 @@ class TransactionController extends Controller
         $microTX = $microTXClient->sendWithPrivateKey(
             $request->sender_private_key, // private key
             $request->recipient_address, // to address
-            $request->amount // value (satoshis)
+            $value // value (satoshis)
         );
 
-        return response($microTX);
+        $response = [
+            'success' => true,
+            'response' => json_decode($microTX)
+        ];
+        return response()->json($response);
     }
 }
