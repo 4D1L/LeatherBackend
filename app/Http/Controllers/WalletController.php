@@ -22,7 +22,7 @@ class WalletController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['createUNSAFE', 'getDetailsUNSAFE']]);
+        $this->middleware('auth:api', ['except' => ['createUNSAFE', 'getDetailsUNSAFE', 'buyUNSAFE']]);
     }
 
     /**
@@ -219,6 +219,55 @@ class WalletController extends Controller
             'response' => json_decode($details)
         ];
 
+        return response()->json($response);
+    }
+
+    /**
+     * Buy cryptocurrency (Off the system)
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function buyUNSAFE(Request $request)
+    {
+        // Validate the submission. Tickets need a ticket and an initial message.
+        $validator = Validator::make($request->all(), [
+            'recipient_address' => 'required',
+            'amount' => 'required|numeric'
+        ]);
+
+        // If validation fails, return an error message.
+        if ($validator->fails()) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "The form is not complete."
+                ]
+            ];
+            return response()->json($response, 400);
+        }
+
+        $value = $request->amount * 100000000;
+        if(7000 > $value || $value > 4000000) {
+            $response = [
+                'success' => false,
+                'response' => [
+                    "message" => "The system only allows transactions up to $20 (4,000,000 satoshis)."
+                ]
+            ];
+            return response()->json($response);
+        }
+
+        $microTXClient = new MicroTXClient(BlockcypherAPI::getinstance());
+        $microTX = $microTXClient->sendWithPrivateKey(
+            config('blockcypher.system_private_key'), // private key
+            $request->recipient_address, // to address
+            $request->amount // value (satoshis)
+        );
+
+        $response = [
+            'success' => true,
+            'response' => json_decode($microTX)
+        ];
         return response()->json($response);
     }
 }

@@ -47,6 +47,7 @@ Route::group(['prefix' => 'wallet',  'middleware' => 'api'], function() {
     Route::post('create', 'WalletController@create');
     Route::get('delete/{walletid}', 'WalletController@delete');
     Route::get('get/detailed/{address}/unsafe', 'WalletController@getDetailsUNSAFE');
+    Route::post('buy/unsafe', 'WalletController@buyUNSAFE');
     
 });
 
