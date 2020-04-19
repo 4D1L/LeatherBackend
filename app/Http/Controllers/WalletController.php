@@ -12,6 +12,7 @@ use App\Helpers\BlockcypherAPI;
 
 // Include the SDK modules you need.
 use \BlockCypher\Client\AddressClient;
+use \BlockCypher\Client\MicroTXClient;
 
 class WalletController extends Controller
 {
@@ -240,7 +241,11 @@ class WalletController extends Controller
             $response = [
                 'success' => false,
                 'response' => [
-                    "message" => "The form is not complete."
+                    "message" => "The form is not complete.",
+                    "values" => [
+                        'recipient_address' => $request->recipient_address,
+                        'amount' => $request->amount
+                    ]
                 ]
             ];
             return response()->json($response, 400);
