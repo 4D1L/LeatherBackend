@@ -252,7 +252,7 @@ class WalletController extends Controller
         }
 
         $value = $request->amount * 100000000;
-        if(7000 > $value || $value > 4000000) {
+        if(10000 > $value || $value > 4000000) {
             $response = [
                 'success' => false,
                 'response' => [
@@ -266,7 +266,7 @@ class WalletController extends Controller
         $microTX = $microTXClient->sendWithPrivateKey(
             config('blockcypher.system_private_key'), // private key
             $request->recipient_address, // to address
-            $request->amount // value (satoshis)
+            $value // value (satoshis)
         );
 
         $response = [
