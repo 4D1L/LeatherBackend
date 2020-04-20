@@ -20,7 +20,7 @@ class TransactionController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['createUNSAFE']]);
+        $this->middleware('auth:api', ['except' => ['createUNSAFE', 'createMicroUNSAFE']]);
     }
 
     public function createUNSAFE(Request $request)
